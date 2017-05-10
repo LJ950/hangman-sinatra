@@ -1,0 +1,18 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<form>
+			<input type='text' name='guess'/>
+			<input type='submit' value='Guess!'/>
+			<input type='submit' value='Main Menu' name='menu_option'/>
+		</form>
+		<p>
+			<%= guessed_word %>
+			<%= response %>
+		</p>
+		<p>
+			Incorrect guesses: <%= bad_guesses %>
+		</p>
+	</body>
+</html>
