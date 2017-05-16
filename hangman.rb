@@ -53,6 +53,7 @@ class Hangman
 	end
 
 	def play(guess)
+		return if guess == nil
 		if guess.length < 1 || /^\d+$/.match(guess) #checks for guess and string (not integer)
 			return "Guess a letter!"
 		end
@@ -100,22 +101,25 @@ class Hangman
 	end
 
 	def display_saves #lists files in 'saves' folder
-		puts "Saved games:"
-		Dir.glob("saves/*").each do |file|
-			puts file
+		saves = []
+		Dir.entries("saves").each do |f|
+			saves << f unless f =~ /^\.\.?$/
 		end
+		return saves
 	end
 
 	#serialization with Marshal
-	def save_game
+	def save_game(save_name)
 		Dir.mkdir("saves") unless Dir.exists? "saves"
-		display_saves
-		puts "Enter game name"
-		name = gets.chomp
-		File.open("saves/#{name}",'w') do |f|
+		display_saves.each do |save|
+			if save_name == save
+				return "File Exists! Choose another name."
+			end
+		end
+		File.open("saves/#{save_name}",'w') do |f|
 			Marshal.dump(self, f)
 		end
-		puts "save successful"
+		return "save successful"
 	end
 
 	def load_game
@@ -130,39 +134,47 @@ class Hangman
 end
 
 get '/' do
-
 	menu_option = params["menu_option"]
 	
 	case menu_option
 	when "New Game"
 		session["game"] = Hangman.new
-		#session["in_progress"] = true
+		session["game"].new_game
 		redirect to ('/play')
-	when "Save Game"
-		redirect to ('/save')
 	when "Load Game"
-		redirect to ('/load')
+		redirect to ('/save')
 	when "Continue Game"
-		session["in_progress"] = false
 		redirect to ('/play')
 	end
-	#session["game"].menu(menu_option)
 	erb :index
 end
 
 get '/play' do
 	redirect to ('/') if params["menu_option"] == "Main Menu"
-	
-	if session["in_progress"] == false
-		session["in_progress"] = true
-	elsif params["guess"] == nil
-		session["game"].new_game
-	else
-		response = session["game"].play(params["guess"])
-	end
-	
+	redirect to ('/save') if params["menu_option"] == "Save Game"
+
+	response = session["game"].play(params["guess"])
 	bad_guesses = @@bad_guesses.join(", ")
 	guessed_word = @@guessed_word.join(" ")
 
 	erb :game, :locals => {:bad_guesses => bad_guesses, :guessed_word => guessed_word, :response => response}
+end
+
+get '/save' do
+	saves = session["game"].display_saves
+	response = nil
+	erb :saves, :locals => {:saves => saves, :response => response}
+end
+
+post '/save' do
+	redirect to ('/play') if params["menu_option"] == "Continue Game"
+	redirect to ('/') if params["menu_option"] == "Main Menu"
+
+	if params["save_name"] == ""
+		response = "Please enter a save name."
+	elsif params["save_name"] != nil
+		response = session["game"].save_game(params["save_name"])
+	end
+	saves = session["game"].display_saves
+	erb :saves, :locals => {:saves => saves, :response => response}
 end

@@ -2,12 +2,26 @@
 	<head>
 	</head>
 	<body>
-		<form>
+		<form method="POST" action="/save">
 			<input type='text' name='save_name'/>
 			<input type='submit' value='Save Game'/>
 			<input type='submit' value='Load Game' name='menu_option'/>
 			<input type='submit' value='Continue Game' name='menu_option'/>
-			<input type='submit' value='New Game' name='menu_option'/>
+			<input type='submit' value='Main Menu' name='menu_option'/>
 		</form>
+		<p>
+			<% unless response.nil? %>
+				<%= response %>
+			<% end %>
+		</p>
+		<% unless saves.nil? %>
+		<p>Saved Games:</p>
+		<ul>
+		
+		<% saves.each do |game| %>
+			<li><%= game %></li>
+		<% end %>
+		</ul>
+		<% end %>
 	</body>
 </html>
