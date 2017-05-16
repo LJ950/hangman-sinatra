@@ -7,9 +7,14 @@
 			<input type='submit' value='Guess!'/>
 			<input type='submit' value='Main Menu' name='menu_option'/>
 		</form>
+
 		<p>
 			<%= guessed_word %>
-			<%= response %>
+		</p>
+		<p>
+			<% if defined? response %>
+				<%= response %>
+			<% end %>
 		</p>
 		<p>
 			Incorrect guesses: <%= bad_guesses %>

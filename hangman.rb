@@ -1,10 +1,15 @@
 require 'sinatra'
-require 'sinatra/reloader' if development?
+require 'sinatra/reloader'# if development?
+
+configure do
+  enable :sessions
+  set :session_secret, "secret"
+end
+
+@@bad_guesses = []
+@@guessed_word = []
 
 class Hangman
-
-
-
 	def initialize
 		@guesses = []
 		@turn = 0
@@ -124,28 +129,38 @@ class Hangman
 	end
 end
 
-game = Hangman.new
-
 get '/' do
+
 	menu_option = params["menu_option"]
-	game.menu(menu_option)
-	if menu_option == "New Game"
+	
+	case menu_option
+	when "New Game"
+		session["game"] = Hangman.new
+		#session["in_progress"] = true
+		redirect to ('/play')
+	when "Save Game"
+		redirect to ('/save')
+	when "Load Game"
+		redirect to ('/load')
+	when "Continue Game"
+		session["in_progress"] = false
 		redirect to ('/play')
 	end
+	#session["game"].menu(menu_option)
 	erb :index
 end
 
 get '/play' do
 	redirect to ('/') if params["menu_option"] == "Main Menu"
-
-	#@@guess = params["guess"]
-
-	if params["guess"] == nil
-		game.new_game
+	
+	if session["in_progress"] == false
+		session["in_progress"] = true
+	elsif params["guess"] == nil
+		session["game"].new_game
 	else
-		response = game.play(params["guess"])
+		response = session["game"].play(params["guess"])
 	end
-
+	
 	bad_guesses = @@bad_guesses.join(", ")
 	guessed_word = @@guessed_word.join(" ")
 
