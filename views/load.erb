@@ -1,0 +1,21 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<form method="POST" action="/load">
+			<input type='submit' value='Main Menu' name='menu_option'/>
+		</form>
+		<p>
+			<%= response %>
+		</p>
+		<% unless saves.nil? %>
+		<form method="POST" action="/load">
+			<ul>
+			<% saves.each do |game| %>
+				<li><input type='submit' value='<%= game %>' name='game_name'/></li>
+			<% end %>
+			</ul>
+		<% end %>
+		<p>You're playing as <%= user %>.</p>
+	</body>
+</html>

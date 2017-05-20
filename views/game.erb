@@ -4,10 +4,16 @@
 	<body>
 		<form>
 			<input type='text' name='guess'/>
-			<input type='submit' value='Guess!'/>
+			<% if response.nil? %>
+				<input type='submit' value='Guess!'/>
+				<input type='submit' value='Save Game' name='menu_option'/>
+			<% end %>
 			<input type='submit' value='Main Menu' name='menu_option'/>
-			<input type='submit' value='Save Game' name='menu_option'/>
+			
 		</form>
+		<div>
+			<img src="<%= "#{image}" %>">
+		</div>
 
 		<p>
 			<%= guessed_word %>
