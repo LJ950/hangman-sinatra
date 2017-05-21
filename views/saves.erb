@@ -5,7 +5,7 @@
 		<form method="POST" action="/save">
 			<input type='text' name='save_name' value="save name"/>
 			<% if user.nil? %>
-			<input type='text' name='user_name' value="<%= user %>"/>
+			<input type='text' name='user_name' value="user name"/>
 			<% end %>
 			<input type='submit' value='Save Game'/>
 			<input type='submit' value='Load Game' name='menu_option'/>

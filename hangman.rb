@@ -37,7 +37,7 @@ get '/play' do
 	response = session["game"].play(params["guess"])
 	image = "/img1.jpg"
 	image = load_image unless @@bad_guesses.empty?
-	bad_guesses = @@bad_guesses.join(", ")
+	bad_guesses = @@bad_guesses
 	guessed_word = @@good_guesses.join(" ")
 	num_bad_guesses = @@bad_guesses.size
 
@@ -72,33 +72,38 @@ end
 
 get '/load' do
 	redirect to ('/user') if session["user_name"].nil?
-
+	if session["game"].nil?
+		session["game"] = Hangman.new
+	end
  	saves = session["game"].display_saves(session["user_name"])
  	response = "Saved Games:"
  	erb :load, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
 end
 
 post '/load' do
-	redirect to ('/') if params["menu_option"] == "Main Menu"
+	if params["menu_option"] == "Main Menu"
+		redirect to ('/')
+	elsif params["menu_option"] == "Change User"
+		redirect to ('/user')
+	end
+
 	session["game"] = load_game(session["user_name"], params["game_name"])
 	redirect to ('/play')
 end
 
 get '/user' do
-	erb :users
+	response = "Please enter a user name."
+	erb :users, :locals => {:response => response}
 end
 
 post '/user' do
 	redirect to ('/') if params["menu_option"] == "Main Menu"
 	session["user_name"] = params["user_name"]
-	if session["game"] == nil
-		session["game"] = Hangman.new
-		session["game"].new_game
-	end
 	if user_exists?(session["user_name"])
 		redirect to ('/load')
 	else
 		response = "Sorry, that user name does not exist."
+		session["user_name"] = nil
 	end
 	erb :users, :locals => {:response => response}
 end

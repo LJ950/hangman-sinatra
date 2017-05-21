@@ -1,6 +1,5 @@
 require 'YAML'
-require 'sinatra'
-require 'sinatra/reloader' if development?
+
 class Hangman
 	def initialize
 		@word = []
@@ -16,12 +15,18 @@ class Hangman
 		if guess.length < 1 || /^\d+$/.match(guess) #checks for guess and string (not integer)
 			return "Guess a letter!"
 		end
+		@all_guesses.each do |letter|
+			if letter == guess
+				return "You've already tried \'#{guess.upcase}\'!"
+			end
+		end
 		@bad_guesses << guess #adds guess to the bad_guesses array
 		@all_guesses << guess
 		letter_match(guess) if guess.length == 1 #checks for single letters
 		@@bad_guesses = @bad_guesses
-		if end_game?(guess) #checks for full word guesses and if any remaining turns
-			return end_game?(guess)
+		check = end_game?(guess)
+		if check #checks for full word guesses and if any remaining turns
+			return check
 		else
 			return
 		end
@@ -38,7 +43,7 @@ class Hangman
 		File.open('lib/5desk.txt').readlines.each do |line|
 			dictionary << line.downcase if line.strip.length.between?(5,12)
 		end
-		@word = ["o","n","e"]#dictionary.sample.strip.split("") #picks random element on dictionary array (word) and splits it into an array of letters.
+		@word = dictionary.sample.strip.split("") #picks random element on dictionary array (word) and splits it into an array of letters.
 	end
 
 	def letter_match(guess) #iterates the word array and adds letters which match the guess to the guessed_word array leaving unmatched letters as underscores.
@@ -58,6 +63,7 @@ class Hangman
 			return "You win! You correctly guessed the word was #{@word.join}"
 		elsif @bad_guesses.size == 6 #checks number of turns remaining
 			@@game_over = true
+			@@good_guesses = @word
 			return "You lose! The word was #{@word.join}"
 		else
 			@@bad_guesses = @bad_guesses
