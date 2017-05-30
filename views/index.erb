@@ -6,12 +6,12 @@
 		<div>
 			<p id="title">Hangman</p>
 			<form>
-				<input id="menu" type='submit' value='New Game' name='menu_option'/>
+				<input type='submit' value='New Game' name='menu_option'/>
 				<% unless game.nil? || game_over == true %>
-					<input id="menu" type='submit' value='Continue Game' name='menu_option'/>
-					<input id="menu" type='submit' value='Save Game' name='menu_option'/>
+					<input type='submit' value='Continue Game' name='menu_option'/>
+					<input type='submit' value='Save Game' name='menu_option'/>
 				<% end %>
-				<input id="menu" type='submit' value='Load Game' name='menu_option'/>
+				<input type='submit' value='Load Game' name='menu_option'/>
 			</form>
 		</div>
 			<div class="footer">
