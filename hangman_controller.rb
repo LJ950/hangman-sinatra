@@ -2,6 +2,8 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require_relative 'hangman.rb'
 
+set :views, Proc.new { File.join('views', 'hangman') }
+
 configure do
   enable :sessions
   set :session_secret, "secret"
@@ -11,11 +13,13 @@ end
 @@good_guesses = []
 @@game_over = false
 
-get '/' do
+get '/hangman' do
 	menu_option = params["menu_option"]
-	game = session["game"]
 	game_over = @@game_over
 	case menu_option
+	when "Exit to Menu"
+		session.clear
+		redirect to ('/')
 	when "New Game"
 		session["game"] = Hangman.new
 		session["game"].new_game
@@ -27,11 +31,11 @@ get '/' do
 	when "Continue Game"
 		redirect to ('/play')
 	end
-	erb :index, :locals => {:game => game, :game_over => game_over}
+	erb :hangman, :locals => {:game => session["game"], :game_over => game_over}
 end
 
 get '/play' do
-	redirect to ('/') if params["menu_option"] == "Main Menu"
+	redirect to ('/hangman') if params["menu_option"] == "Main Menu"
 	redirect to ('/save') if params["menu_option"] == "Save Game"
 
 	response = session["game"].play(params["guess"])
@@ -41,7 +45,7 @@ get '/play' do
 	guessed_word = @@good_guesses.join(" ")
 	num_bad_guesses = @@bad_guesses.size
 
-	erb :game, :locals => {:bad_guesses => bad_guesses, :guessed_word => guessed_word, :response => response, :num_bad_guesses => num_bad_guesses, :image => image}
+	erb :play, :locals => {:bad_guesses => bad_guesses, :guessed_word => guessed_word, :response => response, :num_bad_guesses => num_bad_guesses, :image => image}
 end
 
 get '/save' do
@@ -57,7 +61,7 @@ end
 
 post '/save' do
 	redirect to ('/play') if params["menu_option"] == "Continue Game"
-	redirect to ('/') if params["menu_option"] == "Main Menu"
+	redirect to ('/hangman') if params["menu_option"] == "Main Menu"
 	redirect to ('/load') if params["menu_option"] == "Load Game"
 
 	if params["save_name"] == "" || params["user_name"] == ""
@@ -82,7 +86,7 @@ end
 
 post '/load' do
 	if params["menu_option"] == "Main Menu"
-		redirect to ('/')
+		redirect to ('/hangman')
 	elsif params["menu_option"] == "Change User"
 		redirect to ('/user')
 	end
@@ -97,7 +101,7 @@ get '/user' do
 end
 
 post '/user' do
-	redirect to ('/') if params["menu_option"] == "Main Menu"
+	redirect to ('/hangman') if params["menu_option"] == "Main Menu"
 	session["user_name"] = params["user_name"]
 	if user_exists?(session["user_name"])
 		redirect to ('/load')
@@ -106,6 +110,10 @@ post '/user' do
 		session["user_name"] = nil
 	end
 	erb :users, :locals => {:response => response}
+end
+
+error do
+  "Error! Have you got cookies enabled on your browser?"
 end
 
 private
