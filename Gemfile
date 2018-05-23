@@ -2,8 +2,8 @@
 source "https://rubygems.org"
 
 # gem "rails"
-gem "sinatra" ~> '2.0.1'
+gem 'sinatra', ~> '2.0.1'
 
 group :development do
-  gem "sinatra-contrib"
+  gem 'sinatra-contrib'
 end
