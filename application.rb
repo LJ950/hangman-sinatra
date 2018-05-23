@@ -1,8 +1,8 @@
-# require gems and classes
-require 'bundler'
-Bundler.require
-$: << File.expand_path('../', __FILE__)
-Dir['./app/**/*.rb'].sort.each { |file| require file }
+require 'sinatra'
+
+get '/' do
+  "Hello World!"
+end
 
 # configure sinatra
 set :root, Dir['./app']
