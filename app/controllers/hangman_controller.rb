@@ -1,9 +1,3 @@
-require 'sinatra'
-require 'sinatra/reloader' if development?
-require_relative 'hangman.rb'
-
-set :views, Proc.new { File.join('views', 'hangman') }
-
 configure do
   enable :sessions
   set :session_secret, "secret"
@@ -23,20 +17,20 @@ get '/hangman' do
 	when "New Game"
 		session["game"] = Hangman.new
 		session["game"].new_game
-		redirect to ('/play')
+		redirect to ('/hangman-play')
 	when "Load Game"
-		redirect to ('/load')
+		redirect to ('/hangman-load')
 	when "Save Game"
-		redirect to ('/save')
+		redirect to ('/hangman-save')
 	when "Continue Game"
-		redirect to ('/play')
+		redirect to ('/hangman-play')
 	end
 	erb :hangman, :locals => {:game => session["game"], :game_over => game_over}
 end
 
-get '/play' do
+get '/hangman-play' do
 	redirect to ('/hangman') if params["menu_option"] == "Main Menu"
-	redirect to ('/save') if params["menu_option"] == "Save Game"
+	redirect to ('/hangman-save') if params["menu_option"] == "Save Game"
 
 	response = session["game"].play(params["guess"])
 	image = "/img1.jpg"
@@ -45,10 +39,10 @@ get '/play' do
 	guessed_word = @@good_guesses.join(" ")
 	num_bad_guesses = @@bad_guesses.size
 
-	erb :play, :locals => {:bad_guesses => bad_guesses, :guessed_word => guessed_word, :response => response, :num_bad_guesses => num_bad_guesses, :image => image}
+	erb :hangman_play, :locals => {:bad_guesses => bad_guesses, :guessed_word => guessed_word, :response => response, :num_bad_guesses => num_bad_guesses, :image => image}
 end
 
-get '/save' do
+get '/hangman-save' do
 	unless session["user_name"] == nil
 		saves = session["game"].display_saves(session["user_name"])
 		response = "Saved Games:"
@@ -56,13 +50,13 @@ get '/save' do
 		saves = nil
 		response = nil
 	end
-	erb :saves, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
+	erb :hangman_saves, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
 end
 
-post '/save' do
-	redirect to ('/play') if params["menu_option"] == "Continue Game"
+post '/hangman-save' do
+	redirect to ('/hangman-play') if params["menu_option"] == "Continue Game"
 	redirect to ('/hangman') if params["menu_option"] == "Main Menu"
-	redirect to ('/load') if params["menu_option"] == "Load Game"
+	redirect to ('/hangman-load') if params["menu_option"] == "Load Game"
 
 	if params["save_name"] == "" || params["user_name"] == ""
 		response = "Please enter a save name and a user name."
@@ -71,20 +65,20 @@ post '/save' do
 		response = session["game"].save_game(params["save_name"], session["user_name"], session["game"])
 	end
 	saves = session["game"].display_saves(session["user_name"])
-	erb :saves, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
+	erb :hangman_saves, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
 end
 
-get '/load' do
+get '/hangman-load' do
 	redirect to ('/user') if session["user_name"].nil?
 	if session["game"].nil?
 		session["game"] = Hangman.new
 	end
  	saves = session["game"].display_saves(session["user_name"])
  	response = "Saved Games:"
- 	erb :load, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
+ 	erb :hangman_load, :locals => {:saves => saves, :response => response, :user => session["user_name"]}
 end
 
-post '/load' do
+post '/hangman-load' do
 	if params["menu_option"] == "Main Menu"
 		redirect to ('/hangman')
 	elsif params["menu_option"] == "Change User"
@@ -92,7 +86,7 @@ post '/load' do
 	end
 
 	session["game"] = load_game(session["user_name"], params["game_name"])
-	redirect to ('/play')
+	redirect to ('/hangman-play')
 end
 
 get '/user' do
@@ -104,7 +98,7 @@ post '/user' do
 	redirect to ('/hangman') if params["menu_option"] == "Main Menu"
 	session["user_name"] = params["user_name"]
 	if user_exists?(session["user_name"])
-		redirect to ('/load')
+		redirect to ('/hangman-load')
 	else
 		response = "Sorry, that user name does not exist."
 		session["user_name"] = nil
