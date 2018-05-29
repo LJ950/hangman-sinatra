@@ -1,5 +1,5 @@
 require 'sinatra/base'
-require 'sinatra/reloader'
+#require 'sinatra/reloader'
 # pull in the helpers and controllers
 Dir.glob('./app/{models,helpers,controllers}/*.rb').each { |file| require file }
 
