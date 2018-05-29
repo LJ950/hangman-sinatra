@@ -1,26 +1,24 @@
-<html>
-	<body>
-		<div>
-		<div style="height: 50px"></div>
-			<form method="POST" action="/load">
-				<input type='submit' value='Main Menu' name='menu_option'/>
-				
-			</form>
-		</div>
-		<div>
-			<p id="response">Saved games for <%= user %>:</p>
+<div class="menu menu-game">
+	<ul>
+		<li><a href="/hangman">Main Menu</a></li>
+	</ul>
+</div>
+<div id="line"></div>
+<div>
+	<p id="response">Saved games for <b><%= user %></b>:</p>
+	<form method="POST" action="/hangman-load">
 		<% unless saves.nil? %>
-			<form method="POST" action="/load">
-				<ul>
+			<ul>
 				<% saves.each do |game| %>
 					<li><input type='submit' value='<%= game %>' name='game_name'/></li>
 				<% end %>
-				</ul>
-			<% end %>
-			<div id="line"></div>
-			<input style="height: 50px" type='submit' value='Change User' name='menu_option'/>
-			</form>
-			
-		</div>
-	</body>
-</html>
+			</ul>
+		<% end %>
+	</form>	
+	<div id="line"></div>
+	<div class="menu menu-game">
+		<ul>
+			<li><a href="/user">Change User</a></li>
+		</ul>
+	</div>
+</div>

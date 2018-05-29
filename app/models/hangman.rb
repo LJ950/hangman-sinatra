@@ -1,13 +1,14 @@
-require 'YAML'
-
 class Hangman
+	attr_accessor :good_guesses, :word, :bad_guesses
+
+	require 'YAML'
+
 	def initialize
-		@word = []
+		pick_word
 		@bad_guesses = []
 		@all_guesses = []
-		@@bad_guesses = []
-		@@good_guesses = []
-		@@game_over = false
+		@game_over = false
+		@good_guesses = Array.new(@word.length, "_")
 	end
 
 	def play(guess=nil)
@@ -23,19 +24,11 @@ class Hangman
 		@bad_guesses << guess #adds guess to the bad_guesses array
 		@all_guesses << guess
 		letter_match(guess) if guess.length == 1 #checks for single letters
-		@@bad_guesses = @bad_guesses
-		check = end_game?(guess)
-		if check #checks for full word guesses and if any remaining turns
-			return check
+		if end_game?(guess) #checks for full word guesses and if any remaining turns
+			return end_game?(guess)
 		else
 			return
 		end
-	end
-
-	def new_game 
-		initialize #resets all variables to start a game.
-		pick_word
-		@@good_guesses = Array.new(@word.length, "_") #creates an array of underscores to show how many letters are missing
 	end
 
 	def pick_word #opens dictionary text file and adds each word (line) between 5 and 12 letters to the dictionary array.
@@ -50,23 +43,22 @@ class Hangman
 		@word.each_with_index do |letter, i|
 			if guess == letter
 				@bad_guesses.delete(guess) #removes correct guesses from the bad_guesses array
-				@@good_guesses[i] = letter
+				@good_guesses[i] = letter
 			end
 		end
 	end
 
 	def end_game?(word_guess=nil) #checks if word matches guesses and if whole word guesses match word.
-		if @@good_guesses == @word || word_guess == @word.join
+		if @good_guesses == @word || word_guess == @word.join
 			@bad_guesses.delete(word_guess)
-			@@good_guesses = @word
-			@@game_over = true
+			@good_guesses = @word
+			@game_over = true
 			return "You win! You correctly guessed the word was #{@word.join}"
-		elsif @bad_guesses.size == 6 #checks number of turns remaining
-			@@game_over = true
-			@@good_guesses = @word
+		elsif @bad_guesses.count == 6 #checks number of turns remaining
+			@good_guesses = @word
+			@game_over = true
 			return "You lose! The word was #{@word.join}"
 		else
-			@@bad_guesses = @bad_guesses
 			return false
 		end
 	end
@@ -100,18 +92,7 @@ class Hangman
 		return "save successful"	
 	end
 
-	def reload_variables
-		@@game_over = false
-		@@good_guesses = Array.new(@word.length, "_")
-		@@bad_guesses = @bad_guesses
-		@all_guesses.each do |guess| #creates good guesses list
-			letter_match(guess)
-		end
+	def load_game(user_name, save_name)
+		YAML.load_file("./saves/#{user_name}/#{save_name}")
 	end
-end		
-
-def load_game(user_name, save_name)
-	loaded_game = YAML.load(File.open("saves/#{user_name}/#{save_name}",'r'))
-	loaded_game.reload_variables
-	loaded_game
 end

@@ -1,38 +1,29 @@
-<html>
-	<body>
-		<div style="height: 50px"></div>
-		<div>
-			<form>
-				<input class="h_menu" type='submit' value='Main Menu' name='menu_option'/>
-				<input class="h_menu" type='submit' value='Save Game' name='menu_option'/>				
-			</form>
-		</div>
+<div class="menu menu-game">
+	<ul>
+		<li><a href="/reset">New Game</a></li>
+		<li><a href="/hangman-save">Save Game</a></li>
+		<li><a href="/hangman">Exit to Menu</a></li>
+	</ul>
+</div>
 
 		<div class="game">
-			<img src="<%= "#{image}" %>">
+			<img src="<%= "#{@image}" %>">
 			<div id="response">
-				<% if defined? response %>
-					<p><%= response %></p>
+				<% if defined? @message %>
+					<p><%= @message %></p>
 				<% end %>
 			</div>
 			<div>
-				<form>
+				<form class="menu">
 					<input type='text' name='guess'/>
 					<input type='submit' value='Guess!'/>
 				</form>
 			
-				<p id="guessed_word"><%= guessed_word %></p>
-				<% bad_guesses.each do |letter| %>
-					<p id="bad_guesses"><%=letter%></p>
+				<p id="guessed_word"><%= @guessed_word %></p>
+				<% unless @bad_guesses.nil? %>
+					<% @bad_guesses.each do |letter| %>
+						<p id="bad_guesses"><%= letter %></p>
+					<% end %>
 				<% end %>
 			</div>
-
 		</div>
-
-		<div>
-			
-		</div>
-
-		
-	</body>
-</html>

@@ -2,7 +2,7 @@
 source "https://rubygems.org"
 
 # gem "rails"
-gem 'sinatra', '~>2.0.1'
+gem 'sinatra'
 
 group :development do
   gem 'sinatra-contrib'

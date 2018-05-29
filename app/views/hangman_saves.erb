@@ -1,38 +1,33 @@
-<html>
-	<body>
-	<div>
-		<div style="height: 50px"></div>
-		<form method="POST" action="/save">
-			<input id="hidden_btn" type='submit' value='Submit'/>
-			<input type='submit' value='Continue Game' name='menu_option'/>
-			<input type='submit' value='Main Menu' name='menu_option'/>
-			<input type='submit' value='Load Game' name='menu_option'/>
-			<div id="line"></div>
-			
+<div class="menu menu-game">
+	<ul>
+		<li><a href="/hangman-play">Continue Game</a></li>
+		<li><a href="/hangman">Main Menu</a></li>
+		<li><a href="/hangman-load">Load Game</a></li>
+	</ul>
+</div>
+<div id="line"></div>
+<div>
+	<form method="POST" action="/hangman-save">
+		<input id="hidden_btn" type='submit' value='Submit'/>
 			<% if user.nil? %>
-			<input style="margin-top: 30px; margin-bottom:10px" type='text' name='user_name' value="user name" onfocus="this.value='';"/>
+				<input style="margin-top: 30px; margin-bottom:10px" type='text' name='user_name' value="user name" onfocus="this.value='';"/>
 			<% end %>
-			<input style="margin-top: 20px" class="h_menu" type='text' name='save_name' value="save name" onfocus="this.value='';"/>
-			<input class="h_menu" type='submit' value='Save Game'/>				
-		</form>
-
-	</div>
-	<div>
-		<p id="response"><%= response %></p>
-		<% unless saves.nil? %>
-			<ul>
-			<form method="POST" action="/load">
-				<ul>
-				<% saves.each do |game| %>
-					<li><input type='submit' value='<%= game %>' name='game_name'/></li>
-				<% end %>
-				</ul>
+		<input style="margin-top: 20px" class="h_menu" type='text' name='save_name' value="save name" onfocus="this.value='';"/>
+		<input class="h_menu" type='submit' value='Save Game'/>
+	</form>
+</div>
+<div>
+	<p id="response"><%= response %></p>
+	<% unless saves.nil? %>
+		<ul>
+			<% saves.each do |game| %>
+				<li class="games-list"><%= game %></li>
 			<% end %>
-		<% if user.nil? %>
-			<p id="response">Enter a save name and a user name to save your game</p>
-		<% else %>
-			<p id="response"id="menu">You're saving games under the user name <%= user %>.</p>
-		<% end %>
-	</div>
-	</body>
-</html>
+		</ul>
+	<% end %>
+	<% if user.nil? %>
+		<p id="response">Enter a save name and a user name to save your game</p>
+	<% else %>
+		<p id="response">You're saving games under the user name <b><%= user %></b>.</p>
+	<% end %>
+</div>

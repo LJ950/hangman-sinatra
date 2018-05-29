@@ -1,12 +1,12 @@
-<div>
+<div class="menu">
 	<p id="title">Hangman</p>
-	<form>
-		<input type='submit' value='New Game' name='menu_option'/>
+	<ul>
+		<li><a href="/reset">New Game</a></li>
 		<% unless game.nil? || game_over == true %>
-			<input type='submit' value='Continue Game' name='menu_option'/>
-			<input type='submit' value='Save Game' name='menu_option'/>
+			<li><a href="/hangman-play">Continue Game</a></li>
+			<li><a href="/hangman-save">Save Game</a></li>
 		<% end %>
-		<input type='submit' value='Load Game' name='menu_option'/>
-		<input type='submit' value='Exit to Menu' name='menu_option'/>
-	</form>
+		<li><a href="/hangman-load">Load Game</a></li>
+		<li><a href="/">Quit Game</a></li>
+	</ul>
 </div>

@@ -1,20 +1,14 @@
-<html>	
-	<body>
-		<div>
+<div class="menu menu-game">
+	<ul>
+		<li><a href="/hangman">Main Menu</a></li>
+	</ul>
+</div>
+<div id="line"></div>
+<div>
+	<form method="POST" action="/user">
 		<div style="height: 50px"></div>
-				<form method="POST" action="/user">
-				<input id="hidden_btn" type='submit' value='Submit'/>
-				<input type='submit' value='Main Menu' name='menu_option'/>
-				<div style="height: 50px"></div>
-				<input type='text' name='user_name' value="user name" onfocus="this.value='';"/>
-				<input type='submit' value='Submit'/>
-			</form>
-				<div id="response"><p><%= response %></p></div>
-			<form>
-				
-			</form>
-			
-
-		</div>
-	</body>
-</html>
+		<input type='text' name='user_name' value="user name" onfocus="this.value='';"/>
+		<input type='submit' value='Submit'/>
+	</form>
+</div>
+<div id="response"><p><%= response %></p></div>
