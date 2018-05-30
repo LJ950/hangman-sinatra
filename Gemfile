@@ -3,7 +3,4 @@ source "https://rubygems.org"
 
 # gem "rails"
 gem 'sinatra'
-
-group :development do
-  gem 'sinatra-contrib'
-end
+gem 'sinatra-contrib'
