@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>sketch-pad</title>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<link rel="stylesheet" type="text/css" href="sketch-pad-stylesheet.css">
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="sketch-pad.js"></script>
+	</head>
+	<body>
+		<div class="menu">
+			<p id="title">Sketch Pad</p>
+			<ul>
+				<li><a href="/sketch-pad">New Pad</a></li>
+				<li><a href="/">Quit Game</a></li>
+			</ul>
+		</div>
+		<div id="line"></div>
+		<div class="instructions">
+			<p>Use the mouse to draw on the pad.</p>
+			<p>You can change the resolution and clear the pad by clicking Resize Pad.</p>
+			<p>Try Random Mode and Shade Mode.  Clicking either of these will also clear the pad.</p>
+		</div>
+		<div id="buttonbox">
+			<button type="button" id="randcolour">Random Mode</button>
+			<button type="button" id="greyscale">Shade Mode</button>
+		<!--	<button type="button" id="clear">CLEAR</button>  -->
+			<button type="button" id="reset">Resize Pad</button> 
+		</div>
+		<div class="container"></div>
+		<div class="footer">
+			<p>Created by Luke Jones as part of  <a href="https://www.theodinproject.com/" target="_blank">The Odin Project</a>.</p>
+		</div>
+	</body>
+</html>
