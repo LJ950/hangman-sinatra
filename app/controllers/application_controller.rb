@@ -1,9 +1,9 @@
 class ApplicationController < Sinatra::Base
 #	helpers ApplicationHelpers
 
-  configure :development do
-    register Sinatra::Reloader
-  end
+#  configure :development do
+#    register Sinatra::Reloader
+#  end
 
   configure do
 	  enable :sessions
