@@ -1,5 +1,5 @@
 class SketchPadController < ApplicationController
 	get '/sketch-pad' do
-		erb :sketch_pad, :format => :html5, :layout => false
+		erb :sketch_pad, :layout => false
 	end
 end
