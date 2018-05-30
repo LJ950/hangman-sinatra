@@ -1,7 +1,7 @@
 class Hangman
 	attr_accessor :good_guesses, :word, :bad_guesses
 
-	require 'YAML'
+	require 'yaml'
 
 	def initialize
 		pick_word
